@@ -1,6 +1,5 @@
 package com.example.springmyitems.service;
 
-import com.example.springmyitems.dto.CreateItemRequest;
 import com.example.springmyitems.entity.Category;
 import com.example.springmyitems.entity.Item;
 import com.example.springmyitems.entity.ItemImage;
@@ -8,7 +7,6 @@ import com.example.springmyitems.entity.User;
 import com.example.springmyitems.repository.CategoryRepository;
 import com.example.springmyitems.repository.ItemImageRepository;
 import com.example.springmyitems.repository.ItemRepository;
-import com.example.springmyitems.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,20 +23,19 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final ItemImageRepository itemImageRepository;
-    private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
 
     @Value("${myitems.upload.path}")
     private String imagePath;
 
-    public Item addItemFromItemRequest(CreateItemRequest createItemRequest, MultipartFile[] uploadedFiles) throws IOException {
-        List<Category> categories = getCategories(createItemRequest);
-        Item item = getItemFromRequest(createItemRequest, categories);
+    public Item addItem(Item item, MultipartFile[] uploadedFiles, User user, List<Integer> categories) throws IOException {
+        List<Category> categoriesFromDB = getCategoriesFromRequest(categories);
+        item.setUser(user);
+        item.setCategories(categoriesFromDB);
         itemRepository.save(item);
         saveItemImages(uploadedFiles, item);
         return item;
     }
-
 
     public Item save(Item item) {
         return itemRepository.save(item);
@@ -77,22 +74,12 @@ public class ItemService {
         }
     }
 
-    private List<Category> getCategories(CreateItemRequest createItemRequest) {
+    private List<Category> getCategoriesFromRequest(List<Integer> categoriesIds) {
         List<Category> categories = new ArrayList<>();
-        for (Integer category : createItemRequest.getCategories()) {
+        for (Integer category : categoriesIds) {
             categories.add(categoryRepository.getById(category));
         }
         return categories;
     }
 
-    private Item getItemFromRequest(CreateItemRequest createItemRequest, List<Category> categories) {
-        return Item.builder()
-                .id(createItemRequest.getId())
-                .title(createItemRequest.getTitle())
-                .description(createItemRequest.getDescription())
-                .price(createItemRequest.getPrice())
-                .user(userRepository.findById(createItemRequest.getUserId()).orElse(null))
-                .categories(categories)
-                .build();
-    }
 }

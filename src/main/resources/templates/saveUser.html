@@ -6,8 +6,8 @@
 </head>
 <body>
 Add User
-<form action="/addUser" method="post">
-    <input th:if="${user != null}" type="hidden" th:value="${user.id}" name="id">
+<form action="/user/add" method="post">
+    <input th:if="${user != null}" type="hidden" th:value="${user.id}" name="id"/>
     Name: <input type="text" name="name" th:value="${user == null} ? '' : ${user.name}"/>  <br>
     Surname: <input type="text" name="surname" th:value="${user == null} ? '' : ${user.surname}"/><br>
     Phone: <input type="text" name="phone" th:value="${user == null} ? '' : ${user.phone}"/><br>
@@ -17,3 +17,8 @@ Add User
 </form>
 </body>
 </html>
+
+
+
+
+

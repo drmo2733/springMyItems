@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name="user")
+@Table(name = "user")
 public class User {
 
     @Id
@@ -24,6 +24,6 @@ public class User {
     private String email;
     private String password;
     private String phone;
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Item> items;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

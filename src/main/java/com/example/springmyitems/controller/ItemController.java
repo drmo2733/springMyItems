@@ -3,10 +3,13 @@ package com.example.springmyitems.controller;
 import com.example.springmyitems.dto.CreateItemRequest;
 import com.example.springmyitems.entity.Item;
 import com.example.springmyitems.entity.User;
+import com.example.springmyitems.security.CurrentUser;
 import com.example.springmyitems.service.CategoryService;
 import com.example.springmyitems.service.ItemService;
 import com.example.springmyitems.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,8 @@ public class ItemController {
     private final ItemService itemService;
     private final UserService userService;
     private final CategoryService categoryService;
+
+    private final ModelMapper mapper;
 
 
     @GetMapping("/items")
@@ -41,6 +46,15 @@ public class ItemController {
         return "items";
     }
 
+    @GetMapping("/myItems")
+    public String myItems(ModelMap map, @AuthenticationPrincipal CurrentUser currentUser) {
+        User user = currentUser.getUser();
+        List<Item> items = itemService.findAllByUser(user);
+        map.addAttribute("items", items);
+
+        return "items";
+    }
+
     @GetMapping("/items/add")
     public String addItemPage(ModelMap map) {
         map.addAttribute("categories", categoryService.findAll());
@@ -50,8 +64,13 @@ public class ItemController {
 
     @PostMapping("items/add")
     public String addItem(@ModelAttribute CreateItemRequest createItemRequest,
-                          @RequestParam("pictures") MultipartFile[] uploadedFiles) throws IOException {
-        itemService.addItemFromItemRequest(createItemRequest, uploadedFiles);
+                          @RequestParam("pictures") MultipartFile[] uploadedFiles,
+                          @AuthenticationPrincipal CurrentUser currentUser
+                          ) throws IOException {
+
+        Item item = mapper.map(createItemRequest, Item.class);
+
+        itemService.addItem(item, uploadedFiles, currentUser.getUser(), createItemRequest.getCategories());
         return "redirect:/items";
     }
 

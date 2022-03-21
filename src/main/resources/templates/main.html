@@ -11,8 +11,12 @@ Users:
 <!--</ul>-->
 <a href="?lang=hy">Armenian</a> | <a href="?lang=ru">Russian</a> | <a href="?lang=en">English</a>
 <br><br>
+
+<div th:include="fragments/main-fragment:: Login"></div>
+
+<br><br>
 <a href="/items" th:text="#{main.view.all.items}"></a>
-<a href="/addUser" th:text="#{main.add.user}"></a>
+<a href="/user/add" th:text="#{main.add.user}"></a>
 <table>
     <tr>
         <th>id</th>
@@ -20,15 +24,15 @@ Users:
         <th>surname</th>
         <th>email</th>
         <th>items</th>
-        <th>action</th>
+        <th th:if="${user != null}">action</th>
     </tr>
-    <tr th:each="user:${users}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.name}"></td>
-        <td th:text="${user.surname}"></td>
-        <td th:text="${user.email}"></td>
-        <td><a th:href="@{'/items/byUser/' + ${user.id}}">view user items</a> </td>
-        <td><a th:href="@{'/deleteUser/' + ${user.id}}">delete</a> | <a th:href="@{'/editUser/' + ${user.id}}">edit</a> </td>
+    <tr th:each="u:${users}">
+        <td th:text="${u.id}"></td>
+        <td th:text="${u.name}"></td>
+        <td th:text="${u.surname}"></td>
+        <td th:text="${u.email}"></td>
+        <td><a th:href="@{'/items/byUser/' + ${u.id}}">view user items</a> </td>
+        <td th:if="${user != null}"><a th:href="@{'/deleteUser/' + ${u.id}}">delete</a> | <a th:href="@{'/editUser/' + ${u.id}}">edit</a> </td>
     </tr>
 </table>
 </body>
