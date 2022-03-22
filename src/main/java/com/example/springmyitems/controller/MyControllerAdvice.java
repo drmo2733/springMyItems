@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class MyControllerAdvice {
 
     @ModelAttribute
-    public CurrentUser currentUser(@AuthenticationPrincipal CurrentUser currentUser) {
+    public User currentUser(@AuthenticationPrincipal CurrentUser currentUser) {
         if (currentUser != null) {
-            return currentUser;
+            return currentUser.getUser();
         }
         return null;
     }
