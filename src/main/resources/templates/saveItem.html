@@ -6,6 +6,11 @@
 </head>
 <body>
 Save Item
+<div th:if="${errors != null && !errors.isEmpty()}">
+    <ul>
+        <li style="color: brown" th:each="error: ${errors}" th:text="${error}"></li>
+    </ul>
+</div>
 <form action="/items/add" method="post" enctype="multipart/form-data">
     <input th:if="${item != null}" type="hidden" th:value="${item.id}" name="id">
     Title: <input type="text" name="title" th:value="${item == null} ? '' : ${item.title}"/>  <br>

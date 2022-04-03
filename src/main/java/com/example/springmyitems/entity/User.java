@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -26,4 +27,7 @@ public class User {
     private String phone;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private String token;
+    private boolean active;
+    private LocalDateTime tokenCreatedDate;
 }

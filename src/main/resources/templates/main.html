@@ -4,6 +4,24 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<style>
+    .pagination {
+        display: inline-block;
+    }
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 5px 5px;
+        text-decoration: none;
+    }
+
+    .pagination a.active {
+        background-color: gray;
+        color: white;
+        border-right: 2px ;
+    }
+</style>
 <body>
 Users:
 <!--<ul th:if="${users != null}">-->
@@ -26,14 +44,21 @@ Users:
         <th>items</th>
         <th th:if="${user != null}">action</th>
     </tr>
-    <tr th:each="u:${users}">
+    <tr th:each="u:${userPage.content}">
         <td th:text="${u.id}"></td>
         <td th:text="${u.name}"></td>
         <td th:text="${u.surname}"></td>
         <td th:text="${u.email}"></td>
-        <td><a th:href="@{'/items/byUser/' + ${u.id}}">view user items</a> </td>
-        <td th:if="${user != null}"><a th:href="@{'/deleteUser/' + ${u.id}}">delete</a> | <a th:href="@{'/editUser/' + ${u.id}}">edit</a> </td>
+        <td><a th:href="@{'/items/byUser/' + ${u.id}}">view user items</a></td>
+        <td th:if="${user != null}"><a th:href="@{'/deleteUser/' + ${u.id}}">delete</a> |
+            <a th:href="@{'/editUser/' + ${u.id}}">edit</a></td>
     </tr>
 </table>
+<div th:if="${userPage.totalPages > 0}" class="pagination"
+     th:each="pageNumber : ${pageNumbers}">
+    <a th:href="@{/(size=${userPage.size}, page=${pageNumber - 1})}"
+       th:text="${pageNumber}"
+       th:class="${pageNumber==userPage.number + 1} ? active"></a>
+</div>
 </body>
 </html>
