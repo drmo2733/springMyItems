@@ -22,11 +22,15 @@ public class UserService {
 
 
 
-    public User save(User user) {
+    public void create(User user) {
         String encode = passwordEncoder.encode(user.getPassword());
         user.setPassword(encode);
         user.setRole(Role.USER);
-        return userRepository.save(user);
+        userRepository.save(user);
+    }
+
+    public void save(User user) {
+        userRepository.save(user);
     }
 
     public void deleteById(int id) {
@@ -41,7 +45,7 @@ public class UserService {
         return userRepository.findAll(pageable);
     }
 
-    public Optional<User> findByToken(UUID token) {
+    public Optional<User> findByToken(String token) {
         return userRepository.findByToken(token);
     }
 

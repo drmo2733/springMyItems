@@ -63,7 +63,7 @@ public class UserController {
 
     @GetMapping("/user/activate")
     public String activateUser(ModelMap map, @RequestParam String token) {
-        Optional<User> user = userService.findByToken(UUID.fromString(token));
+        Optional<User> user = userService.findByToken(token);
         if (!user.isPresent()) {
             map.addAttribute("message", "User does not exist");
             return "activateUser";
